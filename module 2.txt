@@ -1,0 +1,46 @@
+Public stressColumnID As Integer
+Public NextNode As Variant
+
+
+
+Sub tubeNodes_Button1_Click()
+Sheets("tubeNodes").Range("J2:X5000").Clear
+    Row = 2
+    Column = 2
+    newComp = Sheets("tubeNodes").Cells(1, 2)
+    Do While newComp <> ""
+        NextNode = Sheets("tubeNodes").Cells(Row, Column)
+        Do While NextNode <> ""
+        findColumn
+            stress = Sheets("stress").Cells(52, stressColumnID)
+            Sheets("tubeNodes").Cells(Row, Column + 8) = stress
+            allowable = Sheets("stress").Cells(48, stressColumnID)
+            Sheets("tubeNodes").Cells(Row, Column + 16) = allowable
+            Row = Row + 1
+            NextNode = Sheets("tubeNodes").Cells(Row, Column)
+            DoEvents
+        Loop
+        Column = Column + 1
+        Row = 2
+        columnID = Sheets("stress").Cells(1, stressColumnID)
+        DoEvents
+        newComp = Sheets("tubeNodes").Cells(Row, Column)
+    Loop
+    
+    
+    
+
+End Sub
+Sub findColumn()
+    stressColumnID = 4
+    columnID = Sheets("stress").Cells(1, stressColumnID)
+    Do While columnID <> ""
+        If columnID = NextNode Then
+    '       stressAct = Sheets("stress").Cells(52, stressColumnID)
+            Exit Sub
+        End If
+        stressColumnID = stressColumnID + 1
+        columnID = Sheets("stress").Cells(1, stressColumnID)
+        DoEvents
+    Loop
+End Sub

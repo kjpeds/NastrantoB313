@@ -1,0 +1,748 @@
+'By: Kenneth "KJ" Pederson, kenneth.j.pederson@nasa.gov, 717-203-3154
+Public index As Integer
+Public index2 As Integer
+Public index3 As Integer
+Public index4 As Integer
+Public index5 As Integer
+Public index6 As Integer
+Public index7 As Integer
+Public index8 As Integer
+Public index9 As Integer
+Public itemcolumn As Integer
+
+
+
+Sub Button1_Click()
+startStats = 58
+Dim nextProp As String
+Dim prop As String
+Dim matchNo As Integer
+Dim i As Integer
+Dim j As Integer
+Dim numElems As Integer
+
+numElems = 0
+nextElem = Sheets("elements").Cells(numElems + 1, 1)
+Do While Not nextElem = ""
+    numElems = numElems + 1
+    nextElem = Sheets("elements").Cells(numElems, 1)
+Loop
+numElems = numElems - 1
+Sheets("stress").Range("A60:E500").Clear
+Sheets("stress").Range("D1:DDD60").Clear
+'Sheets("stress").Range("D18:DDD50").Clear
+
+bendstraightcheck
+radofCurve
+
+
+
+
+elem = Sheets("elements").Cells(2, 1)
+itemcolumn = 3
+i = 4
+j = 2
+Do While Not elem = ""
+Start = Timer
+
+    numofSame = Sheets("BvsC").Cells(i - 3, 2)
+    getrow ("Element Id")
+    Sheets("stress").Cells(index, i) = Sheets("elements").Cells(i - 2, 1) ' element id
+    
+    getrow ("point 1")
+    Sheets("stress").Cells(index, i) = Sheets("elements").Cells(i - 2, 10) ' point 1
+    
+    getrow ("point 2")
+    Sheets("stress").Cells(index, i) = Sheets("elements").Cells(i - 2, 11) ' point 2
+        'This  needs to be updated so it checks element ids for correct match from element id to output id (i-2) should become the row of correct match
+        
+    Do While Not Sheets("output").Cells(j, 1) = "" 'gets the index matching element id to output id
+        If Sheets("elements").Cells(i - 2, 1) = Sheets("output").Cells(j, 1) Then
+            matchNo = j
+            Exit Do
+        End If
+        j = j + 1
+    Loop
+        
+    getrow ("Beam end A plane 1 moment")
+    Sheets("stress").Cells(index, i) = Sheets("output").Cells(matchNo, 3) ' beam end A plane 1 moment
+    getrow ("Beam end A plane 1 moment, SL")
+    Sheets("stress").Cells(index, i) = Sheets("outputSL").Cells(matchNo, 3) ' beam end A plane 1 moment SL
+        
+    getrow ("Beam end A plane 2 moment")
+    Sheets("stress").Cells(index, i) = Sheets("output").Cells(matchNo, 4) ' beam end A plane 2 moment
+    getrow ("Beam end A plane 2 moment, SL")
+    Sheets("stress").Cells(index, i) = Sheets("outputSL").Cells(matchNo, 4) ' beam end A plane 2 moment SL
+    
+    getrow ("Beam end B plane 1 moment")
+    Sheets("stress").Cells(index, i) = Sheets("output").Cells(matchNo, 5) ' beam end B plane 1 moment
+    getrow ("Beam end B plane 1 moment, SL")
+    Sheets("stress").Cells(index, i) = Sheets("outputSL").Cells(matchNo, 5) ' beam end B plane 1 moment SL
+        
+    getrow ("Beam end B plane 2 moment")
+    Sheets("stress").Cells(index, i) = Sheets("output").Cells(matchNo, 6) ' beam end B plane 2 moment
+    getrow ("Beam end B plane 2 moment, SL")
+    Sheets("stress").Cells(index, i) = Sheets("outputSL").Cells(matchNo, 6) ' beam end B plane 2 moment SL
+        
+    getrow ("Beam end A axial force")
+    Sheets("stress").Cells(index, i) = Sheets("output").Cells(matchNo, 7) ' beam end A axial force
+    getrow ("Beam end A axial force, SL")
+    Sheets("stress").Cells(index, i) = Sheets("outputSL").Cells(matchNo, 7) ' beam end A axial force SL
+        
+    getrow ("Beam end B axial force")
+    Sheets("stress").Cells(index, i) = Sheets("output").Cells(matchNo, 8) ' beam end B axial force
+    getrow ("Beam end B axial force, SL")
+    Sheets("stress").Cells(index, i) = Sheets("outputSL").Cells(matchNo, 8) ' beam end B axial force SL
+        
+    getrow ("Beam end A torque")
+    Sheets("stress").Cells(index, i) = Sheets("output").Cells(matchNo, 9) ' beam end A torque
+    getrow ("Beam end A torque, SL")
+    Sheets("stress").Cells(index, i) = Sheets("outputSL").Cells(matchNo, 9) ' beam end A torque SL
+        
+    getrow ("Beam end B torque")
+    Sheets("stress").Cells(index, i) = Sheets("output").Cells(matchNo, 10) ' beam end A torque
+    getrow ("Beam end B torque, SL")
+    Sheets("stress").Cells(index, i) = Sheets("outputSL").Cells(matchNo, 10) ' beam end A torque SL
+        
+    getrow ("Property Card")
+    Sheets("stress").Cells(index, i) = Sheets("elements").Cells(i - 2, 2) ' property  card
+    
+'r2
+        
+    getrow ("Property Card")
+    prop = Sheets("stress").Cells(index, i)
+    wherePer = InStr(prop, ".")
+    propNum = Left(prop, wherePer - 1)
+    j = 2
+    nextProp = Sheets("properties").Cells(j, 1)
+    Do While Not nextProp = ""
+        'Start = Timer
+        
+            If nextProp = propNum Then
+                propType = Sheets("properties").Cells(j, 3)
+                propType = Left(propType, 1)
+'area
+                If numofSame <> "" Then
+                    getrow ("r2 = r")
+                    Sheets("stress").Cells(index, i) = Sheets("properties").Cells(j, 24)
+                            
+                    getrow ("A")
+                    Sheets("stress").Cells(index, i) = Sheets("properties").Cells(j, 8)
+                ElseIf numofSame = "" Then 'bend
+                    getrow ("r2 = r")
+                    Sheets("stress").Cells(index, i) = Sheets("properties").Cells(j, 24)
+                        
+                    getrow ("A")
+                    Sheets("stress").Cells(index, i) = Sheets("properties").Cells(j, 8)
+                    'getrow ("Bend Radius")
+                    'Sheets("stress").Cells(index, i) = Sheets("properties").Cells(j, 31) 'bend radius
+                End If
+            End If
+            
+        j = j + 1
+        nextProp = Sheets("properties").Cells(j, 1)
+        finish = Timer
+        elapsedTime = finish - Start
+        If elapsedTime > 5 Then
+          ' Exit Do
+       End If
+    Loop
+    
+'thickness
+    a = Sqr(4)
+    getrow "thickness, as designed", "r2 = r", "A"
+    a = Sheets("stress").Cells(index2, i) ^ 2 - Sheets("stress").Cells(index3, i) / WorksheetFunction.Pi
+    b = Sheets("stress").Cells(index3, i)
+    c = Sheets("stress").Cells(index3, i) / WorksheetFunction.Pi
+    d = Sheets("stress").Cells(index2, i)
+    d = Sheets("stress").Cells(index2, i) ^ 2
+    
+    Sheets("stress").Cells(index, i) = Sheets("stress").Cells(index2, i) - Sqr(Abs(Sheets("stress").Cells(index2, i) ^ 2 - Sheets("stress").Cells(index3, i) / WorksheetFunction.Pi))
+        
+    
+'         getrow ("thickness, as designed")
+'         Sheets("stress").Cells(index, i) = 0.028
+'    If Sheets("stress").Cells(index, i) = 0.125 Then
+'        getrow ("thickness, as designed")
+'        Sheets("stress").Cells(index, i) = 0.028
+'        getrow ("r2 = r")
+'    ElseIf Sheets("stress").Cells(index, i) = 0.1875 Then
+'        getrow ("thickness, as designed")
+'        Sheets("stress").Cells(index, i) = 0.035
+'        getrow ("r2 = r")
+'    ElseIf Sheets("stress").Cells(index, i) = 0.25 Then
+'        getrow ("thickness, as designed")
+'        Sheets("stress").Cells(index, i) = 0.05
+'    End If
+
+'r1
+    getrow "r1 = r-t", "r2 = r", "thickness, as designed"
+    Sheets("stress").Cells(index, i) = Sheets("stress").Cells(index2, i) - Sheets("stress").Cells(index3, i)
+    
+'h
+    getrow "h = t*R/r", "thickness, as designed", "Bend Radius", "r2 = r"
+    Sheets("stress").Cells(index, i) = Sheets("stress").Cells(index2, i) * Sheets("stress").Cells(index3, i) / Sheets("stress").Cells(index4, i)
+    
+'ii
+    getrow ("h = t*R/r")
+    If Sheets("stress").Cells(index, i) = 0 Then GoTo noh
+    getrow "ii = .9/h^(2/3)", "h = t*R/r"
+    Sheets("stress").Cells(index, i) = 0.9 / Sheets("stress").Cells(index2, i) ^ (2 / 3)
+    
+'io
+    getrow "io = .75/h^(2/3)", "h = t*R/r"
+    Sheets("stress").Cells(index, i) = 0.75 / Sheets("stress").Cells(index2, i) ^ (2 / 3)
+    GoTo noi:
+    
+noh:
+    getrow ("ii = .9/h^(2/3)")
+    Sheets("stress").Cells(index, i) = 1
+    getrow ("io = .75/h^(2/3)")
+    Sheets("stress").Cells(index, i) = 1
+    GoTo noi 'this line might be pointless
+noi:
+
+'Ii, Io
+    getrow "Ii = .75 ii or 1, greater of 2", "ii = .9/h^(2/3)"
+    num = 0.75 * Sheets("stress").Cells(index2, i)
+    num2 = Sheets("stress").Cells(index2, i)
+    Max = WorksheetFunction.Max(0.75 * Sheets("stress").Cells(index2, i), 1)
+    Sheets("stress").Cells(index, i) = WorksheetFunction.Max(0.75 * Sheets("stress").Cells(index2, i), 1)
+    getrow "Io = .75 io or 1, greater of 2", "io = .75/h^(2/3)"
+    Sheets("stress").Cells(index, i) = WorksheetFunction.Max(0.75 * Sheets("stress").Cells(index2, i), 1)
+    
+'it, ia
+    getrow ("It = 1 w/o applicable data")
+    Sheets("stress").Cells(index, i) = 1
+    getrow ("Ia = 1 w/o applicable data")
+    Sheets("stress").Cells(index, i) = 1
+    
+'Z
+    getrow "r2 = r", "r1 = r-t"
+    Z = WorksheetFunction.Pi * (Sheets("stress").Cells(index, i) ^ 4 - Sheets("stress").Cells(index2, i) ^ 4) / (4 * Sheets("stress").Cells(index, i))
+    getrow ("Z = pi*(r2^4-r1^4)/(4*r2)")
+    Sheets("stress").Cells(index, i) = Z
+    
+'Sb, SL
+    getrow "Ii = .75 ii or 1, greater of 2", "Beam end A plane 2 moment, SL", "Beam end B plane 2 moment, SL", "Io = .75 io or 1, greater of 2", "Beam end A plane 1 moment, SL", "Beam end B plane 1 moment, SL"
+    Top = Sqr((Sheets("stress").Cells(index, i) * (Sheets("stress").Cells(index2, i) + Sheets("stress").Cells(index3, i))) ^ 2 + (Sheets("stress").Cells(index4, i) * (Sheets("stress").Cells(index5, i) + Sheets("stress").Cells(index6, i))) ^ 2)
+    getrow "Sb", "Z = pi*(r2^4-r1^4)/(4*r2)"
+    Sheets("stress").Cells(index, i) = Top / Sheets("stress").Cells(index2, i)
+    
+'St, SL
+    getrow "St", "It = 1 w/o applicable data", "Beam end A torque, SL", "Beam end B torque, SL", "Z = pi*(r2^4-r1^4)/(4*r2)"
+    Sheets("stress").Cells(index, i) = Sheets("stress").Cells(index2, i) * (Sheets("stress").Cells(index3, i) + Sheets("stress").Cells(index4, i)) / (2 * Sheets("stress").Cells(index5, i))
+
+'Sa, SL
+    getrow "Sa(axial)", "Ia = 1 w/o applicable data", "Beam end A axial force, SL", "Beam end B axial force, SL", "A"
+    Sheets("stress").Cells(index, i) = Sheets("stress").Cells(index2, i) * (Sheets("stress").Cells(index3, i) + Sheets("stress").Cells(index4, i)) / Sheets("stress").Cells(index5, i)
+
+'Sl, SL
+    getrow "Sl", "Sa(axial)", "Sb", "St"
+    Sheets("stress").Cells(index, i) = Sqr((Abs(Sheets("stress").Cells(index2, i)) + Sheets("stress").Cells(index3, i)) ^ 2 + (2 * Sheets("stress").Cells(index4, i)) ^ 2)
+    
+'S
+    getrow "S"
+    matAllowAmbient = Sheets("Additional Input").Cells(4, 7)
+    Sheets("stress").Cells(index, i) = matAllowAmbient
+    
+'pressure
+    getrow "Pressure"
+    pressureInput = Sheets("Additional Input").Cells(3, 7)
+    Sheets("stress").Cells(index, i) = pressureInput
+    
+'Ec
+    Ec = Sheets("Additional Input").Cells(11, 7)
+    getrow "Ec"
+    Sheets("stress").Cells(index, i) = Ec
+    
+'Ej
+    Ej = Sheets("Additional Input").Cells(12, 7)
+    getrow "Ej"
+    Sheets("stress").Cells(index, i) = Ej
+
+'E
+    getrow "E"
+    E = Ec * Ej
+    Sheets("stress").Cells(index, i) = E
+    
+'W
+    getrow "W"
+    weldReducFactor = Sheets("Additional Input").Cells(6, 7)
+    Sheets("stress").Cells(index, i) = weldReducFactor
+    
+'I
+    getrow "Bend Radius", "r2 = r"
+    num = 4 * (Sheets("stress").Cells(index, i) / (Sheets("stress").Cells(index2, i) * 2)) - 1
+    getrow "Bend Radius", "r2 = r"
+    den = 4 * (Sheets("stress").Cells(index, i) / (Sheets("stress").Cells(index2, i) * 2)) - 2
+    Iinner = num / den
+    getrow "Bend Radius", "r2 = r"
+    num = 4 * (Sheets("stress").Cells(index, i) / (Sheets("stress").Cells(index2, i) * 2)) + 1
+    getrow "Bend Radius", "r2 = r"
+    den = 4 * (Sheets("stress").Cells(index, i) / (Sheets("stress").Cells(index2, i) * 2)) + 2
+    Iouter = num / den
+    getrow "I=max(3d, 3e)"
+    Sheets("stress").Cells(index, i) = WorksheetFunction.Max(Iinner, Iouter)
+    
+    
+'Y
+    Y = Sheets("Additional Input").Cells(7, 7)
+    getrow "Y"
+    Sheets("stress").Cells(index, i) = Y
+
+'c
+    c = Sheets("Additional Input").Cells(8, 7)
+    getrow "c"
+    Sheets("stress").Cells(index, i) = 0
+
+'thickness, 3a,b,c
+    j = 2
+'    getrow ("Property Card")
+'    prop = Sheets("stress").Cells(index, i)
+'    wherePer = InStr(prop, ".")
+'    propNum = Left(prop, wherePer - 1)
+    nextProp = Sheets("properties").Cells(j, 1)
+    Do While Not nextProp = ""
+        
+        'Start = Timer
+'        propType = Sheets("properties").Cells(j, 3)
+'        propType = Left(propType, 1)
+        'propType = Right(propType, 1)
+            If numofSame <> "" Then
+                getrow "thickness, straight(3a)", "Pressure", "r2 = r", "S", "E", "W", "Y"
+                Sheets("stress").Cells(index, i) = Sheets("stress").Cells(index2, i) * 2 * Sheets("stress").Cells(index3, i) / (2 * (Sheets("stress").Cells(index4, i) * Sheets("stress").Cells(index5, i) * Sheets("stress").Cells(index6, i) + Sheets("stress").Cells(index2, i) * Sheets("stress").Cells(index7, i)))
+                getrow "thickness, straight(3b)", "Pressure", "r2 = r", "c", "S", "E", "W", "Y"
+                Sheets("stress").Cells(index, i) = Sheets("stress").Cells(index2, i) * (2 * Sheets("stress").Cells(index3, i) + 2 * Sheets("stress").Cells(index4, i)) / (2 * (Sheets("stress").Cells(index5, i) * Sheets("stress").Cells(index6, i) * Sheets("stress").Cells(index7, i) - Sheets("stress").Cells(index2, i)(1 - Sheets("stress").Cells(index8, i))))
+                getrow "thickness, straight(3a)", "thickness, as designed"
+                If Sheets("stress").Cells(index, i) > Sheets("stress").Cells(index2, i) Then
+                    getrow "thickness, straight(3a)"
+                    Sheets("stress").Cells(index, i).Interior.ColorIndex = 3
+                    getrow "thickness, straight(3a)", "thickness, as designed"
+                ElseIf Sheets("stress").Cells(index, i) < Sheets("stress").Cells(index2, i) Then
+                    getrow "thickness, straight(3a)"
+                    Sheets("stress").Cells(index, i).Interior.ColorIndex = 4
+                End If
+
+                getrow "thickness, straight(3b)", "thickness, as designed"
+                If Sheets("stress").Cells(index, i) > Sheets("stress").Cells(index2, i) Then
+                    getrow "thickness, straight(3b)"
+                    Sheets("stress").Cells(index, i).Interior.ColorIndex = 3
+                    getrow "thickness, straight(3b)", "thickness, as designed"
+                ElseIf Sheets("stress").Cells(index, i) < Sheets("stress").Cells(index2, i) Then
+                    getrow "thickness, straight(3b)"
+                    Sheets("stress").Cells(index, i).Interior.ColorIndex = 4
+                End If
+
+                Exit Do
+            ElseIf numofSame = "" Then 'bend
+                getrow "thickness, bends (3c)", "Pressure", "r2 = r", "S", "E", "W", "I=max(3d, 3e)", "Y"
+                Sheets("stress").Cells(index, i) = Sheets("stress").Cells(index2, i) * 2 * Sheets("stress").Cells(index3, i) / (2 * ((Sheets("stress").Cells(index4, i) * Sheets("stress").Cells(index5, i) * Sheets("stress").Cells(index6, i)) / Sheets("stress").Cells(index7, i) + Sheets("stress").Cells(index2, i) * Sheets("stress").Cells(index8, i)))
+                getrow "thickness, bends (3c)", "thickness, as designed"
+                If Sheets("stress").Cells(index, i) > Sheets("stress").Cells(index2, i) Then
+                    getrow "thickness, bends (3c)"
+                    Sheets("stress").Cells(index, i).Interior.ColorIndex = 3
+                    getrow "thickness, bends (3c)", "thickness, as designed"
+                ElseIf Sheets("stress").Cells(index, i) < Sheets("stress").Cells(index2, i) Then
+                    getrow "thickness, bends (3c)"
+                    Sheets("stress").Cells(index, i).Interior.ColorIndex = 4
+                End If
+                Exit Do
+            End If
+        j = j + 1
+        nextProp = Sheets("properties").Cells(j, 1)
+        finish = Timer
+        elapsedTime = finish - Start
+        If elapsedTime > 5 Then
+           Exit Do
+        End If
+    Loop
+    
+    'Sc
+    getrow "Sc = allowable at room temp"
+    matAllowAmbient = Sheets("Additional Input").Cells(4, 7)
+    Sheets("stress").Cells(index, i) = matAllowAmbient
+    
+    'Sh
+    getrow "sh = allowable at max temp"
+    matAllowMax = Sheets("Additional Input").Cells(5, 7)
+    Sheets("stress").Cells(index, i) = matAllowMax
+    
+    'f
+    cyclesNum = Sheets("Additional Input").Cells(10, 7)
+    f = 6 * cyclesNum ^ -0.2
+    fm = Sheets("Additional Input").Cells(9, 7)
+    If f >= fm Then
+        f = fm
+    End If
+    getrow "f"
+    Sheets("stress").Cells(index, i) = f
+    
+    'sa
+    getrow "sh = allowable at max temp", "Sl"
+    If Sheets("stress").Cells(index, i) > Sheets("stress").Cells(index2, i) Then
+        getrow "sa(allowable)", "f", "Sc = allowable at room temp", "sh = allowable at max temp", "Sl", "Ec", "Ej"
+        Sheets("stress").Cells(index, i) = Sheets("stress").Cells(index2, i) * (1.25 * (Sheets("stress").Cells(index3, i) * Sheets("stress").Cells(index6, i) + Sheets("stress").Cells(index4, i) * Sheets("stress").Cells(index7, i)) - Sheets("stress").Cells(index5, i))
+    Else
+        getrow "sa(allowable)", "f", "Sc = allowable at room temp", "sh = allowable at max temp", "Ec", "Ej"
+        Sheets("stress").Cells(index, i) = Sheets("stress").Cells(index2, i) * (1.25 * Sheets("stress").Cells(index3, i) * Sheets("stress").Cells(index5, i) + 0.25 * Sheets("stress").Cells(index4, i) * Sheets("stress").Cells(index6, i))
+    End If
+    
+    'sb
+    getrow "ii = .9/h^(2/3)", "Beam end A plane 2 moment", "Beam end B plane 2 moment", "io = .75/h^(2/3)", "Beam end A plane 1 moment", "Beam end B plane 1 moment"
+    Top = Sqr((Sheets("stress").Cells(index, i) * (Sheets("stress").Cells(index2, i) + Sheets("stress").Cells(index3, i))) ^ 2 + (Sheets("stress").Cells(index4, i) * (Sheets("stress").Cells(index5, i) + Sheets("stress").Cells(index6, i))) ^ 2)
+    getrow "Sb(18)", "Z = pi*(r2^4-r1^4)/(4*r2)"
+    Sheets("stress").Cells(index, i) = Top / Sheets("stress").Cells(index2, i)
+    
+    'St(17)
+    getrow "st(17)", "It = 1 w/o applicable data", "Beam end A torque", "Beam end B torque", "Z = pi*(r2^4-r1^4)/(4*r2)"
+    Sheets("stress").Cells(index, i) = Sheets("stress").Cells(index2, i) * (Sheets("stress").Cells(index3, i) + Sheets("stress").Cells(index4, i)) / (2 * Sheets("stress").Cells(index5, i))
+
+    'Sa(17)
+    getrow "sa(17) axial", "Ia = 1 w/o applicable data", "Beam end A axial force", "Beam end B axial force", "A" 'should this add the two axial forces???
+    Sheets("stress").Cells(index, i) = Sheets("stress").Cells(index2, i) * (Sheets("stress").Cells(index3, i) + Sheets("stress").Cells(index4, i)) / Sheets("stress").Cells(index5, i)
+
+    'Sl
+    getrow "Se", "sa(17) axial", "Sb(18)", "st(17)"
+    Sheets("stress").Cells(index, i) = Sqr((Abs(Sheets("stress").Cells(index2, i)) + Sheets("stress").Cells(index3, i)) ^ 2 + (2 * Sheets("stress").Cells(index4, i)) ^ 2)
+
+    'sl < or > sh
+    getrow "Sl", "sh = allowable at max temp"
+    If Sheets("stress").Cells(index, i) > Sheets("stress").Cells(index2, i) Then
+        getrow "Sl"
+        Sheets("stress").Cells(index, i).Interior.ColorIndex = 3
+        getrow "Element Id"
+        a = Sheets("stress").Cells(index, i)
+        Sheets("stress").Cells(60 + numErrSus, 1) = Sheets("stress").Cells(index, i)
+        numErrSus = numErrSus + 1
+        getrow "Sl", "sh = allowable at max temp"
+    ElseIf Sheets("stress").Cells(index, i) < Sheets("stress").Cells(index2, i) Then
+        getrow "Sl"
+        Sheets("stress").Cells(index, i).Interior.ColorIndex = 4
+    End If
+    
+    'se < or > sa, allowable
+    getrow "Se", "sa(allowable)"
+    If Sheets("stress").Cells(index, i) > Sheets("stress").Cells(index2, i) Then
+        getrow "Se"
+        Sheets("stress").Cells(index, i).Interior.ColorIndex = 3
+        getrow "Element Id"
+        Sheets("stress").Cells(60 + numErrFlex, 2) = Sheets("stress").Cells(index, i)
+        getrow "sa(allowable)"
+        Sheets("stress").Cells(60 + numErrFlex, 3) = Sheets("stress").Cells(index, i)
+        getrow "Se"
+        Sheets("stress").Cells(60 + numErrFlex, 4) = Sheets("stress").Cells(index, i)
+        Sheets("stress").Cells(60 + numErrFlex, 5) = Sheets("stress").Cells(60 + numErrFlex, 3) / Sheets("stress").Cells(60 + numErrFlex, 4) - 1
+        numErrFlex = numErrFlex + 1
+        getrow "Se", "sa(allowable)"
+    ElseIf Sheets("stress").Cells(index, i) < Sheets("stress").Cells(index2, i) Then
+        getrow "Se"
+        Sheets("stress").Cells(index, i).Interior.ColorIndex = 4
+    End If
+    
+'next elem
+    i = i + 1
+    elem = Sheets("elements").Cells(i - 2, 1)
+    Sheets("stress").Cells(startStats, 1) = "% complete ---->"
+    Sheets("stress").Cells(startStats, 2) = Round((i / numElems) * 100, 0)
+    DoEvents
+    If i = 2581 Then
+        t = 4
+    End If
+    
+
+finish = Timer
+elapsedTime = finish - Start
+If elapsedTime > 5 Then
+       'Exit Do
+End If
+Loop
+getBorders
+    
+End Sub
+
+Sub getrow(ParamArray intNums())
+
+
+inNum = 1
+For Each indicy In intNums
+Row = 1
+itemcolumn = 3
+nextLbl = Sheets("stress").Cells(Row, itemcolumn)
+    Do While nextLbl <> ""
+    
+        If nextLbl = indicy Then
+            If inNum = 1 Then
+                index = Row
+            ElseIf inNum = 2 Then
+                index2 = Row
+            ElseIf inNum = 3 Then
+                index3 = Row
+            ElseIf inNum = 4 Then
+                index4 = Row
+            ElseIf inNum = 5 Then
+                index5 = Row
+            ElseIf inNum = 6 Then
+                index6 = Row
+            ElseIf inNum = 7 Then
+                index7 = Row
+            ElseIf inNum = 8 Then
+                index8 = Row
+            ElseIf inNum = 9 Then
+                index9 = Row
+            End If
+            
+            GoTo nextIndicy
+        End If
+        Row = Row + 1
+        nextLbl = Sheets("stress").Cells(Row, itemcolumn)
+    Loop
+nextIndicy:
+inNum = inNum + 1
+Next
+End Sub
+
+Sub getBorders()
+Dim ender As Integer
+ender = 0
+i = 1
+j = itemcolumn + 1
+
+Do While Sheets("stress").Cells(i, j) <> ""
+Do While Sheets("stress").Cells(i, itemcolumn) <> ""
+If Sheets("stress").Cells(i, itemcolumn).Borders(xlEdgeBottom).ColorIndex = -4105 Then
+    Sheets("stress").Cells(i, j).Borders(xlEdgeBottom).Color = 0
+    If j = 4 Then
+        Sheets("stress").Cells(i, j).Borders(xlEdgeLeft).Color = 0
+    End If
+End If
+i = i + 1
+Loop
+i = 1
+j = j + 1
+
+Loop
+
+End Sub
+Sub colorTest()
+a = ActiveCell.Borders(xlEdgeBottom).ColorIndex
+End Sub
+
+Sub bendstraightcheck()
+starter = Timer
+
+Dim elems(2, 15) As Double
+'Dim elemCount(10000, 1) As Double
+numberofElements = Sheets("elements").Range("A8575").End(xlUp).Row
+numberofNodes = Sheets("nodes").Range("A8575").End(xlUp).Row
+ReDim elemCount(numberofElements, 2)
+Sheets("BvsC").Range("A1:K5000").Clear
+Sheets("elements").Range("M2:S5000").Clear
+
+For n = 0 To numberofElements
+    elemCount(n, 0) = Sheets("elements").Cells(n + 2, 1)
+Next
+
+m = 0
+
+For i = 2 To numberofNodes
+    nodeID = Sheets("nodes").Cells(i, 1)
+    For j = 1 To numberofElements
+        If Sheets("elements").Cells(j, 10) = nodeID Then
+            elems(m, 0) = Sheets("elements").Cells(j, 1)
+            elems(m, 1) = Sheets("elements").Cells(j, 10)
+            elems(m, 2) = Sheets("elements").Cells(j, 11)
+            For k = 2 To numberofNodes
+                Node = Sheets("nodes").Cells(k, 1)
+                If Node = elems(m, 1) Then
+                    elems(m, 3) = Sheets("nodes").Cells(k, 8)
+                    elems(m, 4) = Sheets("nodes").Cells(k, 9)
+                    elems(m, 5) = Sheets("nodes").Cells(k, 10)
+                End If
+            Next
+            For k = 2 To numberofNodes
+                Node = Sheets("nodes").Cells(k, 1)
+                If Node = elems(m, 2) Then
+                    elems(m, 6) = Sheets("nodes").Cells(k, 8)
+                    elems(m, 7) = Sheets("nodes").Cells(k, 9)
+                    elems(m, 8) = Sheets("nodes").Cells(k, 10)
+                End If
+            Next
+            elems(m, 9) = elems(m, 6) - elems(m, 3)
+            elems(m, 10) = elems(m, 7) - elems(m, 4)
+            elems(m, 11) = elems(m, 8) - elems(m, 5)
+            elems(m, 12) = Sqr(elems(m, 9) ^ 2 + elems(m, 10) ^ 2 + elems(m, 11) ^ 2)
+            elems(m, 13) = elems(m, 9) / elems(m, 12)
+            elems(m, 14) = elems(m, 10) / elems(m, 12)
+            elems(m, 15) = elems(m, 11) / elems(m, 12)
+            m = m + 1
+            Exit For
+        End If
+    Next
+    For j = 1 To numberofElements
+        If Sheets("elements").Cells(j, 11) = nodeID Then
+            elems(m, 0) = Sheets("elements").Cells(j, 1)
+            elems(m, 1) = Sheets("elements").Cells(j, 10)
+            elems(m, 2) = Sheets("elements").Cells(j, 11)
+            For k = 2 To numberofNodes
+                Node = Sheets("nodes").Cells(k, 1)
+                If Node = elems(m, 1) Then
+                    elems(m, 3) = Sheets("nodes").Cells(k, 8)
+                    elems(m, 4) = Sheets("nodes").Cells(k, 9)
+                    elems(m, 5) = Sheets("nodes").Cells(k, 10)
+                End If
+            Next
+            For k = 2 To numberofNodes
+                Node = Sheets("nodes").Cells(k, 1)
+                If Node = elems(m, 2) Then
+                    elems(m, 6) = Sheets("nodes").Cells(k, 8)
+                    elems(m, 7) = Sheets("nodes").Cells(k, 9)
+                    elems(m, 8) = Sheets("nodes").Cells(k, 10)
+                End If
+            Next
+            elems(m, 9) = elems(m, 6) - elems(m, 3)
+            elems(m, 10) = elems(m, 7) - elems(m, 4)
+            elems(m, 11) = elems(m, 8) - elems(m, 5)
+            elems(m, 12) = Sqr(elems(m, 9) ^ 2 + elems(m, 10) ^ 2 + elems(m, 11) ^ 2)
+            elems(m, 13) = elems(m, 9) / elems(m, 12)
+            elems(m, 14) = elems(m, 10) / elems(m, 12)
+            elems(m, 15) = elems(m, 11) / elems(m, 12)
+            Sheets("BvsC").Cells(j - 1, 5) = elems(m, 9)
+            Sheets("BvsC").Cells(j - 1, 6) = elems(m, 10)
+            Sheets("BvsC").Cells(j - 1, 7) = elems(m, 11)
+            Sheets("BvsC").Cells(j - 1, 8) = elems(m, 12)
+            Sheets("BvsC").Cells(j - 1, 9) = elems(m, 13)
+            Sheets("BvsC").Cells(j - 1, 10) = elems(m, 14)
+            Sheets("BvsC").Cells(j - 1, 11) = elems(m, 15)
+            m = m + 1
+
+            Exit For
+        End If
+
+    Next
+
+    If Round(elems(0, 13), 2) = Round(elems(1, 13), 2) And Round(elems(0, 14), 2) = Round(elems(1, 14), 2) And Round(elems(0, 15), 2) = Round(elems(1, 15), 2) Then
+        For q = 0 To 2
+            For t = 0 To numberofElements - 2
+                If elemCount(t, 0) = elems(q, 0) Then
+                    elemCount(t, 1) = elemCount(t, 1) + 1
+                    Sheets("BvsC").Cells(t + 1, 3) = Sheets("BvsC").Cells(t + 1, 3) + 1
+                    Exit For
+                End If
+            Next
+        Next
+    End If
+
+    Erase elems
+    m = 0
+    startStats = 58
+    Sheets("stress").Cells(startStats, 6) = "BvsC % complete -->"
+    Sheets("stress").Cells(startStats, 8) = Round((i / numberofNodes) * 100, 0)
+    DoEvents
+
+Next
+Sheets("BvsC").Range("A1:C10000") = elemCount
+ender = Timer
+elapsedTime = ender - starter
+Sheets("stress").Cells(startStats + 1, 8) = elapsedTime
+
+End Sub
+
+Sub radofCurve()
+    Dim curC1(3) As Double
+    Dim curC2(3) As Double
+    Dim curC3(3) As Double
+    Dim AB(2) As Double
+    Dim BC(2) As Double
+    Dim AC(2) As Double
+    Sheets("stress").Range("D25:DDD25").Clear
+    numberofElements = Sheets("elements").Range("A8575").End(xlUp).Row - 1
+    numberofNodes = Sheets("nodes").Range("A8575").End(xlUp).Row - 1
+    startStats = 58
+    For i = 1 To numberofElements
+        For p = 0 To 3
+            curC1(p) = 0
+            curC2(p) = 0
+            curC3(p) = 0
+        Next
+        
+        numofSame = Sheets("BvsC").Cells(i, 2)
+        elemofSame = Sheets("BvsC").Cells(i, 1)
+        If numofSame = "" Then
+            curC1(0) = Sheets("elements").Cells(i + 1, 10)
+            curC2(0) = Sheets("elements").Cells(i + 1, 11)
+            For k = 1 To numberofElements
+                searchC1 = Sheets("elements").Cells(k + 1, 10)
+                searchElem = Sheets("elements").Cells(k + 1, 1)
+                If curC1(0) = searchC1 And elemofSame <> searchElem Or curC2(0) = searchC1 And elemofSame <> searchElem Then
+                    searchC2 = Sheets("elements").Cells(k + 1, 11)
+                    If searchC2 <> curC1(0) And searchC2 <> curC2(0) Then
+                        curC3(0) = searchC2 '6/16 dont think this is working correctly...
+                        Exit For
+                        
+                        'now we have all 3 points.  need to get their coordinates and calc bend radii from them 6/14
+                    End If
+                End If
+            Next
+        
+            For n = 1 To numberofNodes
+                If Sheets("nodes").Cells(n, 1) = curC1(0) Then
+                    For m = 1 To 3
+                        curC1(m) = Sheets("nodes").Cells(n, m + 7)
+                    Next
+                End If
+            Next
+            For n = 1 To numberofNodes
+                If Sheets("nodes").Cells(n, 1) = curC2(0) Then
+                    For m = 1 To 3
+                        curC2(m) = Sheets("nodes").Cells(n, m + 7)
+                    Next
+                End If
+            Next
+            For n = 1 To numberofNodes
+                If Sheets("nodes").Cells(n, 1) = curC3(0) Then
+                    For m = 1 To 3
+                        curC3(m) = Sheets("nodes").Cells(n, m + 7)
+                    Next
+                End If
+            Next
+            For t = 1 To 3
+                AB(t - 1) = curC2(t) - curC1(t)
+                BC(t - 1) = curC3(t) - curC2(t)
+                AC(t - 1) = curC3(t) - curC1(t)
+            Next
+            dotProd = Application.SumProduct(AB, AC)
+            lenAB = Sqr((curC2(1) - curC1(1)) ^ 2 + (curC2(2) - curC1(2)) ^ 2 + (curC2(3) - curC1(3)) ^ 2)
+            lenBC = Sqr((curC3(1) - curC2(1)) ^ 2 + (curC3(2) - curC2(2)) ^ 2 + (curC3(3) - curC2(3)) ^ 2)
+            lenAC = Sqr((curC3(1) - curC1(1)) ^ 2 + (curC3(2) - curC1(2)) ^ 2 + (curC3(3) - curC1(3)) ^ 2)
+            inners = dotProd / (lenAB * lenAC)
+            theta = ArcCos(dotProd / (lenAB * lenAC))
+            a = 0.5 * lenAB * lenAC * Sin(theta)
+            bendRad = lenAB * lenBC * lenAC / (4 * a)
+            getrow "Bend Radius"
+            Sheets("stress").Cells(index, i + 3) = bendRad
+            'crossProd = Vector.crossproduct(AB, AC)
+        End If
+        Sheets("stress").Cells(startStats, 10) = "radofCurve % complete -->"
+        Sheets("stress").Cells(startStats, 13) = Round((i / numberofElements) * 100, 0)
+        DoEvents
+    Next
+End Sub
+Sub test()
+a = Sheets("elements").Cells(1, 26)
+b = Sheets("elements").Cells(2, 26)
+If a <> b Then
+    c = "diff"
+Else
+    b = "same"
+End If
+    
+
+End Sub
+Function ArcCos(X As Double) As Double
+ArcCos = Atn(-X / Sqr(-X * X + 1)) + 2 * Atn(1) 'dividing by zero 6/16
+End Function
+
+
+
+
